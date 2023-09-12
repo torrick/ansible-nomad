@@ -1,11 +1,14 @@
 - name: Preflight
   tags: always
-  include_tasks: 00-preflight.yml
+  include_tasks:
+    file: "{{ _os }}/00-preflight.yml"
 
 - name: Install and configure nomad
   tags: config
-  include_tasks: 01-install.yml
+  include_tasks:
+    file: "{{ _os }}/01-install.yml"
 
 - name: Add configs
   tags: config
-  include_tasks: 02-configs.yml
+  include_tasks:
+    file: "{{ _os }}/02-configs.yml"

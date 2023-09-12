@@ -7,20 +7,37 @@ nomad_configs: {}
 nomad_user: root
 nomad_group: root
 
-nomad_dir: "/opt/nomad"
-nomad_dirs:
-  main:
-    path: "{{ nomad_dir }}"
-  configs:
-    path: "{{ nomad_dir }}/config.d"
-  certs:
-    path: "{{ nomad_dir }}/certs"
-    mode: "u=rwX,g=rX,o="
-  logs:
-    path: "/var/log/nomad"
-  data:
-    path: "/var/lib/nomad"
-    mode: "u=rwX,g=rX,o="
+nomad_dir: "{{ _os_nomad_dir[_os] }}"
+nomad_dirs: "{{ _os_nomad_dirs[_os] }}"
+
+_os_nomad_dir: 
+  linux: "/opt/nomad"
+  windows: "{{ ansible_env.SystemDrive | default(omit) }}\\opt\\nomad"
+_os_nomad_dirs:
+  linux:
+    main:
+      path: "{{ nomad_dir }}"
+    configs:
+      path: "{{ nomad_dir }}/config.d"
+    certs:
+      path: "{{ nomad_dir }}/certs"
+      mode: "u=rwX,g=rX,o="
+    logs:
+      path: "/var/log/nomad"
+    data:
+      path: "/var/lib/nomad"
+      mode: "u=rwX,g=rX,o="
+  windows:
+    main:
+      path: "{{ nomad_dir }}"
+    configs:
+      path: "{{ nomad_dir }}\\config"
+    certs:
+      path: "{{ nomad_dir }}\\tls"
+    logs:
+      path: "{{ nomad_dir }}\\logs"
+    data:
+      path: "{{ nomad_dir }}\\data"
 
 nomad_service: |
   #!/sbin/openrc-run
